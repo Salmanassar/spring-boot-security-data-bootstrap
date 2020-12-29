@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Add User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+</head>
+
+<body>
+<div class="container my-9">
+    <h3> Add User</h3>
+    <div class="card">
+        <div style="float:right">
+            <form th:action="@{/logout}" method="POST">
+                <i class="fas fa-user-times ml-2"></i>
+                <input type="submit" value="Logout"/>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="col-md-10">
+                <form id="userForm" href="list.html" th:action="@{/admin}" th:object="${user}" action="#" method="post">
+                    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                        <p th:each="error : ${#fields.errors('*')}" th:text="${error}">Validation error</p>
+                    </div>
+                    <!--                <input type="hidden" th:field="*{id}"/>-->
+
+                    <div class="my-1">
+                        <a th:href="@{/admin}" class="btn btn-primary"/>
+                        <i class="fas fa-user-plus ml-0">back to main page</i></a>
+                    </div>
+                    <div class="row">
+                        <input type="hidden" th:field="*{id}" th:class="${#fields.hasErrors('id')} ? 'field-error'"/>
+                        <div class="form-group col-md-7"
+                             th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
+                            <label for="firstName" class="col-form-label">First Name</label>
+                            <p><input id="firstName" type="text" th:field="*{firstName}"/>
+                                <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                                      class="form-control"> First Name </span></p>
+                        </div>
+
+                        <div class="form-group col-md-7"
+                             th:classappend="${#fields.hasErrors('lastName')} ? 'has-error'">
+                            <label for="firstName" class="col-form-label">Last Name</label>
+                            <p><input id="lastName" type="text" th:field="*{lastName}"/>
+                                <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                                      class="form-control"> Last Name </span></p>
+                        </div>
+
+                        <div class="form-group col-md-7" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
+                            <label for="lastName" class="col-form-label">Email</label>
+                            <p><input id="email" type="text" th:field="*{email}"/>
+                                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                      class="form-control"> Email </span></p>
+                        </div>
+
+                        <div class="form-group col-md-7"
+                             th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
+                            <label for="password" class="col-form-label">Password</label>
+                            <p><input id="password" type="password" th:field="*{password}"/>
+                                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                                      class="form-control"> Password</span></p>
+                        </div>
+
+                        <div class="form-group col-md-7"
+                             th:classappend="${#fields.hasErrors('passwordConfirmation')} ? 'has-error'">
+                            <label for="password" class="col-form-label"> Password Confirmation </label>
+                            <p><input id="password-always-checkbox" type="password" th:field="*{passwordConfirmation}"/>
+                                <span th:if="${#fields.hasErrors('passwordConfirmation')}"
+                                      th:errors="*{passwordConfirmation}"
+                                      class="form-control"> Password Confirmation </span></p>
+                        </div>
+                        <div th:align="center">
+                            <p><b>Choose role(s)</b></p>
+                            ADMIN: <input type="checkbox" name="isAdmin"
+                                          th:checked="${isAdmin}"><br>
+                            USER: <input type="checkbox" name="isUser"
+                                         th:checked="${isUser}"><br>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="submit" class="btn btn-primary" value=" Submit "/>
+                        </div>
+
+                        <!--                    <input type="hidden" id="id" th:field="*{id}"/>-->
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

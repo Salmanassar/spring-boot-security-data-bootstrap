@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>The User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+</head>
+<body>
+<div layout:fragment="content" class="container">
+
+    <div style="float:right">
+        <form th:action="@{/logout}" method="POST">
+            <i class="fas fa-user-times ml-2"></i>
+            <input type="submit" class="btn btn-primary" value="Logout"/>
+        </form>
+    </div>
+    <div class="form-group col-md-7">
+    </div>
+    <div class="container my-5">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Registration Data</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${user==null&&user.email.isEmpty()}">
+                <td colspan="4">No user</td>
+            </tr>
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getFirstName()}"></td>
+            <td th:text="${user.getLastName()}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${#calendars.format(user.created, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${user.getRolesString()}"></td>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
