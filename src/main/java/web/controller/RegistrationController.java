@@ -2,23 +2,16 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import web.model.Role;
 import web.model.User;
 import web.service.UserService;
-import web.util.Checkbox;
-
-import javax.validation.Valid;
 
 @Controller
 class RegistrationController {
 
     private UserService userService;
-    private Checkbox checkbox;
 
     public RegistrationController(UserService userService) {
         this.userService = userService;
@@ -29,29 +22,24 @@ class RegistrationController {
         return userService;
     }
 
-    @Autowired
-    public void setCheckbox(Checkbox checkbox) {
-        this.checkbox = checkbox;
-    }
-
-    @RequestMapping(value = "signup")
-    public ModelAndView registrationForm() {
-        return new ModelAndView("registration", "user", new User());
-    }
+//    @RequestMapping(value = "register")
+//    public ModelAndView registrationForm() {
+//        return new ModelAndView("login", "user", new User());
+//    }
 
     @PostMapping(value = "register")
-    public ModelAndView createUser(@Valid final User user, @RequestParam(name = "isAdmin", required = false) boolean isAdmin,
-                                   @RequestParam(name = "isUser", required = false) boolean isUser, final BindingResult result) {
-        if (result.hasErrors()) {
-            return new ModelAndView("registration", "user", user);
-        }
-        try {
-            checkbox.selectRoleFromCheckbox(user, isAdmin, isUser);
-            userService.createUser(user);
-        } catch (Exception e) {
-            result.addError(new FieldError("user", "user", e.getMessage()));
-            return new ModelAndView("registration", "user", user);
-        }
+    public ModelAndView create(User user, @RequestParam String firstNameCreate, @RequestParam String lastNameCreate,
+                               @RequestParam byte ageCreate, @RequestParam String emailCreate,
+                               @RequestParam String passwordCreate, @RequestParam String roleCreate) {
+
+        user.setId(0l);
+        user.setFirstName(firstNameCreate);
+        user.setLastName(lastNameCreate);
+        user.setAge(ageCreate);
+        user.setEmail(emailCreate);
+        user.setPassword(passwordCreate);
+        user.setRoles(new Role().setRoleString(roleCreate));
+        userService.createUser(user);
         return new ModelAndView("redirect:/login");
     }
 }

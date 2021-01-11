@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class User implements Serializable, UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotEmpty(message = "Fist Name is required.")
@@ -39,32 +38,31 @@ public class User implements Serializable, UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Transient
-    @NotEmpty(message = "Password is required.")
-    private String passwordConfirmation;
-
-    @Column(name = "calendar")
-    private Calendar created = Calendar.getInstance();
+    @Column(name = "age")
+    private byte age;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Role> roles;
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, byte age, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.age = age;
         this.email = email;
         this.password = password;
     }
 
     public String getRolesString() {
-        return getRoles().stream().map(Role::getRole).collect(Collectors.joining(", "));
+        return roles.stream().map(Role::getRole).collect(Collectors.joining(", "));
     }
 
     public boolean isAdmin() {
         return getRolesString().contains("ROLE_ADMIN");
     }
 
-    public boolean isUser() { return getRolesString().contains("ROLE_USER"); }
+    public boolean isUser() {
+        return getRolesString().contains("ROLE_USER");
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
